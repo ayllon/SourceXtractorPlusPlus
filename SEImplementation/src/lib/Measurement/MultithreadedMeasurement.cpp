@@ -73,6 +73,7 @@ void MultithreadedMeasurement::handleMessage(const std::shared_ptr<SourceGroupIn
   for (auto& source : *source_group) {
     source.getProperty<SourceID>();
   }
+  logger.debug() << "MultithreadedMeasurement::handleMessage()";
 
   // put the new SourceGroup into the input queue
   m_input_queue.emplace_back(m_group_counter++, source_group);
