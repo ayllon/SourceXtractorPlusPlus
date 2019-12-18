@@ -312,10 +312,11 @@ public:
         memory_config.getTileSize(), memory_config.getTileMaxMemory());
 
     CheckImages::getInstance().configure(config_manager);
-
+    logger.debug() << "Before";
     task_factory_registry->configure(config_manager);
+    logger.debug() << "After";
     task_factory_registry->registerPropertyInstances(*output_registry);
-    
+
     segmentation_factory.configure(config_manager);
     partition_factory.configure(config_manager);
     grouping_factory.configure(config_manager);
