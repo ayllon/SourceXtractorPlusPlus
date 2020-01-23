@@ -30,31 +30,33 @@
  */    
 
 /**
- * @file ElongationTaskFactory.h
+ * @file VignetSourceTask.h
  *
- * @date Jan 17, 2020
+ * @date Jan. 17, 2020
  * @author mkuemmel@usm.lmu.de
  */
-#ifndef _SEIMPLEMENTATION_PLUGIN_ELONGATIONTASKFACTORY_H_
-#define _SEIMPLEMENTATION_PLUGIN_ELONGATIONTASKFACTORY_H_
 
-#include "SEFramework/Task/TaskFactory.h"
-#include "SEImplementation/Plugin/Elongation/ElongationSourceTask.h"
+#ifndef _SEIMPLEMENTATION_PLUGIN_VIGNETSOURCETASK_H_
+#define _SEIMPLEMENTATION_PLUGIN_VIGNETSOURCETASK_H_
+
+#include "SEFramework/Task/SourceTask.h"
+#include "SEImplementation/Plugin/Vignet/Vignet.h"
+#include "SEImplementation/Plugin/ShapeParameters/ShapeParameters.h"
 
 namespace SourceXtractor {
-class ElongationTaskFactory : public TaskFactory {
+class VignetSourceTask : public SourceTask {
 public:
-  ElongationTaskFactory() {}
-  virtual ~ElongationTaskFactory() = default;
-  // TaskFactory implementation
-  virtual std::shared_ptr<Task> createTask(const PropertyId& property_id) const {
-    if (property_id == PropertyId::create<Elongation>()) {
-      return std::make_shared<ElongationSourceTask>();
-    }
-    else{
-      return nullptr;
-    }
-  }
-}; // end of ElongationTaskFactory class
-}  // namespace SourceXtractor
-#endif /* _SEIMPLEMENTATION_PLUGIN_ELONGATIONTASKFACTORY_H_ */
+  virtual ~VignetSourceTask() = default;
+  virtual void computeProperties(SourceInterface& source) const {
+    // get the relevant properties
+    const auto& a_image = source.getProperty<ShapeParameters>().getEllipseA();
+    const auto& b_image = source.getProperty<ShapeParameters>().getEllipseB();
+
+    // compute and set the property
+    source.setProperty<Vignet>((SeFloat)a_image/b_image);
+};
+private:
+}; // End of VignetSourceTask class
+} // namespace SourceXtractor
+
+#endif /* _SEIMPLEMENTATION_PLUGIN_VIGNETSOURCETASK_H_ */

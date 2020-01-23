@@ -30,31 +30,29 @@
  */    
 
 /**
- * @file ElongationTaskFactory.h
+ * @file Vignet.h
  *
  * @date Jan 17, 2020
  * @author mkuemmel@usm.lmu.de
  */
-#ifndef _SEIMPLEMENTATION_PLUGIN_ELONGATIONTASKFACTORY_H_
-#define _SEIMPLEMENTATION_PLUGIN_ELONGATIONTASKFACTORY_H_
 
-#include "SEFramework/Task/TaskFactory.h"
-#include "SEImplementation/Plugin/Elongation/ElongationSourceTask.h"
+#ifndef _SEIMPLEMENTATION_PLUGIN_VIGNET_H_
+#define _SEIMPLEMENTATION_PLUGIN_VIGNET_H_
+
+#include "SEUtils/Types.h"
+#include "SEFramework/Property/Property.h"
 
 namespace SourceXtractor {
-class ElongationTaskFactory : public TaskFactory {
+class Vignet : public Property {
 public:
-  ElongationTaskFactory() {}
-  virtual ~ElongationTaskFactory() = default;
-  // TaskFactory implementation
-  virtual std::shared_ptr<Task> createTask(const PropertyId& property_id) const {
-    if (property_id == PropertyId::create<Elongation>()) {
-      return std::make_shared<ElongationSourceTask>();
-    }
-    else{
-      return nullptr;
-    }
+  virtual ~Vignet() = default;
+  Vignet(std::vector<SeFloat> &vignet) : m_vignet(vignet) {}
+  const std::vector<SeFloat> &getElongation () const {
+    return m_vignet;
   }
-}; // end of ElongationTaskFactory class
-}  // namespace SourceXtractor
-#endif /* _SEIMPLEMENTATION_PLUGIN_ELONGATIONTASKFACTORY_H_ */
+private:
+  std::vector<SeFloat> m_vignet;
+}; // end of Vignet class
+} // namespace SourceXtractor
+
+#endif /* _SEIMPLEMENTATION_PLUGIN_VIGNET_H_*/

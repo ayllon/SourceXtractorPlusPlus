@@ -30,31 +30,39 @@
  */    
 
 /**
- * @file ElongationTaskFactory.h
+ * @file VignetPlugin.h
  *
  * @date Jan 17, 2020
  * @author mkuemmel@usm.lmu.de
  */
-#ifndef _SEIMPLEMENTATION_PLUGIN_ELONGATIONTASKFACTORY_H_
-#define _SEIMPLEMENTATION_PLUGIN_ELONGATIONTASKFACTORY_H_
 
-#include "SEFramework/Task/TaskFactory.h"
-#include "SEImplementation/Plugin/Elongation/ElongationSourceTask.h"
+#ifndef _SEIMPLEMENTATION_PLUGIN_VIGNETPLUGIN_H_
+#define _SEIMPLEMENTATION_PLUGIN_VIGNETPLUGIN_H_
+
+#include "SEFramework/Plugin/Plugin.h"
+#include "SEImplementation/Plugin/Vignet/VignetTaskFactory.h"
+#include "Vignet.h"
 
 namespace SourceXtractor {
-class ElongationTaskFactory : public TaskFactory {
+class VignetPlugin : public Plugin {
 public:
-  ElongationTaskFactory() {}
-  virtual ~ElongationTaskFactory() = default;
-  // TaskFactory implementation
-  virtual std::shared_ptr<Task> createTask(const PropertyId& property_id) const {
-    if (property_id == PropertyId::create<Elongation>()) {
-      return std::make_shared<ElongationSourceTask>();
-    }
-    else{
-      return nullptr;
-    }
+  virtual ~VignetPlugin() = default;
+  virtual void registerPlugin(PluginAPI& plugin_api) {
+    plugin_api.getTaskFactoryRegistry().registerTaskFactory<VignetTaskFactory, Vignet>();
+    plugin_api.getOutputRegistry().registerColumnConverter<Vignet, float>(
+            "vignet",
+            [](const Vignet& prop){
+              return prop.getVignet();
+            },
+            "[]",
+            "The object vignet (a_image / b_image)"
+    );
+    plugin_api.getOutputRegistry().enableOutput<Vignet>("Vignet");
   }
-}; // end of ElongationTaskFactory class
+  virtual std::string getIdString() const {
+    return "vignet";
+  }
+private:
+}; // end of VignetPlugin class
 }  // namespace SourceXtractor
-#endif /* _SEIMPLEMENTATION_PLUGIN_ELONGATIONTASKFACTORY_H_ */
+#endif /* _SEIMPLEMENTATION_PLUGIN_VIGNETPLUGIN_H_ */
