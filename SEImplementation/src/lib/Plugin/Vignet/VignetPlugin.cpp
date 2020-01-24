@@ -40,5 +40,5 @@
 #include "SEImplementation/Plugin/Vignet/VignetPlugin.h"
 
 namespace SourceXtractor {
-  static StaticPlugin<VignetPlugin> elongation;
+  static StaticPlugin<VignetPlugin> vignet;
 }

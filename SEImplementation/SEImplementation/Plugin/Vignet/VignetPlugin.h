@@ -60,7 +60,7 @@ public:
     plugin_api.getOutputRegistry().enableOutput<Vignet>("Vignet");
   }
   virtual std::string getIdString() const {
-    return "vignet";
+    return "Vignet";
   }
 private:
 }; // end of VignetPlugin class

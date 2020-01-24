@@ -39,6 +39,7 @@
 #define _SEIMPLEMENTATION_PLUGIN_VIGNETTASKFACTORY_H_
 
 #include "SEFramework/Task/TaskFactory.h"
+#include "SEImplementation/Plugin/Vignet/VignetConfig.h"
 #include "SEImplementation/Plugin/Vignet/VignetSourceTask.h"
 
 namespace SourceXtractor {
@@ -46,6 +47,17 @@ class VignetTaskFactory : public TaskFactory {
 public:
   VignetTaskFactory() {}
   virtual ~VignetTaskFactory() = default;
+
+  void reportConfigDependencies(Euclid::Configuration::ConfigManager& manager) const {
+    manager.registerConfiguration<VignetConfig>();
+  };
+
+  void configure(Euclid::Configuration::ConfigManager& manager) {
+    auto vignet_config = manager.getConfiguration<VignetConfig>();
+    m_vignet_size = vignet_config.getVignetSize();
+    m_vignet_default_pixval = vignet_config.getVignetDefaultPixval();
+  };
+
   // TaskFactory implementation
   virtual std::shared_ptr<Task> createTask(const PropertyId& property_id) const {
     if (property_id == PropertyId::create<Vignet>()) {
@@ -55,6 +67,9 @@ public:
       return nullptr;
     }
   }
+private:
+  std::string m_vignet_size;
+  double      m_vignet_default_pixval;
 }; // end of VignetTaskFactory class
 }  // namespace SourceXtractor
 #endif /* _SEIMPLEMENTATION_PLUGIN_VIGNETTASKFACTORY_H_ */
