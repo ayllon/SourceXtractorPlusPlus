@@ -49,13 +49,13 @@ public:
   virtual ~VignetPlugin() = default;
   virtual void registerPlugin(PluginAPI& plugin_api) {
     plugin_api.getTaskFactoryRegistry().registerTaskFactory<VignetTaskFactory, Vignet>();
-    plugin_api.getOutputRegistry().registerColumnConverter<Vignet, float>(
+    plugin_api.getOutputRegistry().registerColumnConverter<Vignet, std::vector<SeFloat>>(
             "vignet",
             [](const Vignet& prop){
               return prop.getVignet();
             },
             "[]",
-            "The object vignet (a_image / b_image)"
+            "The object vignet data"
     );
     plugin_api.getOutputRegistry().enableOutput<Vignet>("Vignet");
   }

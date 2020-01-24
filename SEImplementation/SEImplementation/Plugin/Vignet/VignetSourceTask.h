@@ -32,7 +32,7 @@
 /**
  * @file VignetSourceTask.h
  *
- * @date Jan. 17, 2020
+ * @date Jan. 23, 2020
  * @author mkuemmel@usm.lmu.de
  */
 
@@ -46,16 +46,24 @@
 namespace SourceXtractor {
 class VignetSourceTask : public SourceTask {
 public:
+  VignetSourceTask(std::vector<int> vignet_size, double vignet_default_pixval):
+    m_vignet_size(vignet_size),
+    m_vignet_default_pixval((SeFloat)vignet_default_pixval) {};
+
   virtual ~VignetSourceTask() = default;
+
   virtual void computeProperties(SourceInterface& source) const {
     // get the relevant properties
     const auto& a_image = source.getProperty<ShapeParameters>().getEllipseA();
     const auto& b_image = source.getProperty<ShapeParameters>().getEllipseB();
 
     // compute and set the property
-    source.setProperty<Vignet>((SeFloat)a_image/b_image);
+    std::vector<SeFloat> vignet_vector(m_vignet_size[0]*m_vignet_size[0], (SeFloat)a_image/b_image);
+    source.setProperty<Vignet>(vignet_vector);
 };
 private:
+  std::vector<int> m_vignet_size;
+  SeFloat  m_vignet_default_pixval;
 }; // End of VignetSourceTask class
 } // namespace SourceXtractor
 

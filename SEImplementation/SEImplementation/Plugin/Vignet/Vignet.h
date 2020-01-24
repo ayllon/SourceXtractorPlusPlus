@@ -46,15 +46,12 @@ namespace SourceXtractor {
 class Vignet : public Property {
 public:
   virtual ~Vignet() = default;
-  //Vignet(std::vector<SeFloat> &vignet) : m_vignet(vignet) {}
-  Vignet(SeFloat vignet) : m_vignet(vignet) {}
-  const SeFloat &getVignet () const {
-    //const std::vector<SeFloat> &getVignet () const {
+  Vignet(std::vector<SeFloat> vignet) : m_vignet(vignet) {}
+  const std::vector<SeFloat> &getVignet () const {
     return m_vignet;
   }
 private:
-  //std::vector<SeFloat> m_vignet;
-  SeFloat m_vignet;
+  std::vector<SeFloat> m_vignet;
 }; // end of Vignet class
 } // namespace SourceXtractor
 
