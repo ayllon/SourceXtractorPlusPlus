@@ -58,13 +58,14 @@ public:
   virtual void computeProperties(SourceInterface& source) const {
     std::lock_guard<std::recursive_mutex> lock(MultithreadedMeasurement::g_global_mutex);
 
-    const int& x_pix = (int)source.getProperty<PixelCentroid>().getCentroidX()+0.5;
-    const int& y_pix = (int)source.getProperty<PixelCentroid>().getCentroidY()+0.5;
-
     // get the detection and the variance frames
     const auto& sub_image     = source.getProperty<DetectionFrame>().getFrame()->getSubtractedImage();
-    const auto& var_image     = source.getProperty<DetectionFrame>().getFrame()->getVarianceMap();
+    const auto& var_image     = source.getProperty<DetectionFrame>().getFrame()->getUnfilteredVarianceMap();
     const auto& var_threshold = source.getProperty<DetectionFrame>().getFrame()->getVarianceThreshold();
+
+    // get the central pixel coord
+    const int x_pix = (int)(source.getProperty<PixelCentroid>().getCentroidX()+0.5);
+    const int y_pix = (int)(source.getProperty<PixelCentroid>().getCentroidY()+0.5);
 
     // get the sub-image boundaries
     int x_start = x_pix-m_vignet_size[0]/2;
@@ -75,23 +76,16 @@ public:
     // create and fill the vignet vector
     std::vector<SeFloat> vignet_vector(m_vignet_size[0]*m_vignet_size[1], m_vignet_default_pixval);
     int index=0;
-    for (int ix=x_start; ix<x_end; ix++){
-      for (int iy=y_start; iy<y_end; iy++, index++){
-        //if (ix>-1 && iy>-1 && ix<sub_image->getWidth() && iy<sub_image->getHeight()) {
-        //  if (var_image->getValue(ix, iy)<var_threshold)
-        //    vignet_vector[index] =  sub_image->getValue(ix, iy);
-        //}
-        if (ix<0 || iy<0 || ix>=sub_image->getWidth() || iy>=sub_image->getHeight()) {
-          //vignet_vector[index] = m_vignet_default_pixval;
+    for (int iy=y_start; iy<y_end; iy++){
+      for (int ix=x_start; ix<x_end; ix++, index++){
+
+        // skip pixels outside of the image
+        if (ix<0 || iy<0 || ix>=sub_image->getWidth() || iy>=sub_image->getHeight())
           continue;
-        }
-        //else {
-         if (var_image->getValue(ix, iy)<var_threshold)
-           vignet_vector[index] =  sub_image->getValue(ix, iy);
-         // else
-            //vignet_vector[index] = m_vignet_default_pixval;
-         //   continue;
-        //}
+
+        // skip masked pixels
+        if (var_image->getValue(ix, iy)<var_threshold)
+          vignet_vector[index] =  sub_image->getValue(ix, iy);
       }
     }
 
