@@ -30,39 +30,44 @@
  */    
 
 /**
- * @file NDetectedPixelsPlugin.h
+ * @file DummyTaskFactory.h
  *
- * @date Apr 27, 2018
- * @author mkuemmel@usm.lmu.de
+ * @date
+ * @author
  */
+#ifndef _SEIMPLEMENTATION_PLUGIN_DUMMYTASKFACTORY_H_
+#define _SEIMPLEMENTATION_PLUGIN_DUMMYTASKFACTORY_H_
 
-#ifndef _SEIMPLEMENTATION_PLUGIN_NDETECTEDPIXELSPLUGIN_H_
-#define _SEIMPLEMENTATION_PLUGIN_NDETECTEDPIXELSPLUGIN_H_
-
-#include "NDetectedPixels.h"
-#include "SEFramework/Plugin/Plugin.h"
-#include "SEImplementation/Plugin/NDetectedPixels/NDetectedPixelsTaskFactory.h"
+#include "SEFramework/Task/TaskFactory.h"
+#include "SEImplementation/Plugin/Dummy/DummyConfig.h"
+#include "SEImplementation/Plugin/Dummy/DummySourceTask.h"
 
 namespace SourceXtractor {
-class NDetectedPixelsPlugin : public Plugin {
+class DummyTaskFactory : public TaskFactory {
 public:
-  virtual ~NDetectedPixelsPlugin() = default;
-  virtual void registerPlugin(PluginAPI& plugin_api) {
-    plugin_api.getTaskFactoryRegistry().registerTaskFactory<NDetectedPixelsTaskFactory, NDetectedPixels>();
-    plugin_api.getOutputRegistry().registerColumnConverter<NDetectedPixels, int64_t>(
-            "n_detected_pixels",
-            [](const NDetectedPixels& prop){
-              return prop.getNDetectedPixels();
-            },
-            "[]",
-            "Total number of detected pixels"
-    );
-    plugin_api.getOutputRegistry().enableOutput<NDetectedPixels>("NDetectedPixels");
-  }
-  virtual std::string getIdString() const {
-    return "n_detected_pixels";
+  DummyTaskFactory() {}
+  virtual ~DummyTaskFactory() = default;
+
+  void reportConfigDependencies(Euclid::Configuration::ConfigManager& manager) const {
+    manager.registerConfiguration<DummyConfig>();
+  };
+
+  void configure(Euclid::Configuration::ConfigManager& manager) {
+    auto dummy_config = manager.getConfiguration<DummyConfig>();
+    m_dummy_value = dummy_config.getDummy();
+  };
+
+  // TaskFactory implementation
+  virtual std::shared_ptr<Task> createTask(const PropertyId& property_id) const {
+    if (property_id == PropertyId::create<Dummy>()) {
+      return std::make_shared<DummySourceTask>(m_dummy_value);
+    }
+    else{
+      return nullptr;
+    }
   }
 private:
-}; // end of NDetectedPixelsPlugin class
+  float m_dummy_value;
+}; // end of DummyTaskFactory class
 }  // namespace SourceXtractor
-#endif /* _SEIMPLEMENTATION_PLUGIN_NDETECTEDPIXELS_H_ */
+#endif /* _SEIMPLEMENTATION_PLUGIN_DUMMYTASKFACTORY_H_ */

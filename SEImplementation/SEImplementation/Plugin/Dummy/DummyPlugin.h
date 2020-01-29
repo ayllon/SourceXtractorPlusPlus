@@ -30,39 +30,39 @@
  */    
 
 /**
- * @file NDetectedPixelsPlugin.h
+ * @file DummyPlugin.h
  *
- * @date Apr 27, 2018
- * @author mkuemmel@usm.lmu.de
+ * @date
+ * @author
  */
 
-#ifndef _SEIMPLEMENTATION_PLUGIN_NDETECTEDPIXELSPLUGIN_H_
-#define _SEIMPLEMENTATION_PLUGIN_NDETECTEDPIXELSPLUGIN_H_
+#ifndef _SEIMPLEMENTATION_PLUGIN_DUMMYPLUGIN_H_
+#define _SEIMPLEMENTATION_PLUGIN_DUMMYPLUGIN_H_
 
-#include "NDetectedPixels.h"
+#include "Dummy.h"
 #include "SEFramework/Plugin/Plugin.h"
-#include "SEImplementation/Plugin/NDetectedPixels/NDetectedPixelsTaskFactory.h"
+#include "SEImplementation/Plugin/Dummy/DummyTaskFactory.h"
 
 namespace SourceXtractor {
-class NDetectedPixelsPlugin : public Plugin {
+class DummyPlugin : public Plugin {
 public:
-  virtual ~NDetectedPixelsPlugin() = default;
+  virtual ~DummyPlugin() = default;
   virtual void registerPlugin(PluginAPI& plugin_api) {
-    plugin_api.getTaskFactoryRegistry().registerTaskFactory<NDetectedPixelsTaskFactory, NDetectedPixels>();
-    plugin_api.getOutputRegistry().registerColumnConverter<NDetectedPixels, int64_t>(
-            "n_detected_pixels",
-            [](const NDetectedPixels& prop){
-              return prop.getNDetectedPixels();
+    plugin_api.getTaskFactoryRegistry().registerTaskFactory<DummyTaskFactory, Dummy>();
+    plugin_api.getOutputRegistry().registerColumnConverter<Dummy, float>(
+            "dummy",
+            [](const Dummy& prop){
+              return prop.getDummy();
             },
             "[]",
-            "Total number of detected pixels"
+            "A total dummy column"
     );
-    plugin_api.getOutputRegistry().enableOutput<NDetectedPixels>("NDetectedPixels");
+    plugin_api.getOutputRegistry().enableOutput<Dummy>("Dummy");
   }
   virtual std::string getIdString() const {
-    return "n_detected_pixels";
+    return "dummy";
   }
 private:
-}; // end of NDetectedPixelsPlugin class
+}; // end of DummyPlugin class
 }  // namespace SourceXtractor
-#endif /* _SEIMPLEMENTATION_PLUGIN_NDETECTEDPIXELS_H_ */
+#endif /* _SEIMPLEMENTATION_PLUGIN_DUMMYPLUGIN_H_ */

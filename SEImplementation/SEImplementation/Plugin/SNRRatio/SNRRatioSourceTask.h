@@ -30,39 +30,36 @@
  */    
 
 /**
- * @file NDetectedPixelsPlugin.h
+ * @file SNRRatioSourceTask.h
  *
- * @date Apr 27, 2018
+ * @date Apr 29, 2020
  * @author mkuemmel@usm.lmu.de
  */
 
-#ifndef _SEIMPLEMENTATION_PLUGIN_NDETECTEDPIXELSPLUGIN_H_
-#define _SEIMPLEMENTATION_PLUGIN_NDETECTEDPIXELSPLUGIN_H_
+#ifndef _SEIMPLEMENTATION_PLUGIN_SNRRATIOSOURCETASK_H_
+#define _SEIMPLEMENTATION_PLUGIN_SNRRATIOSOURCETASK_H_
 
-#include "NDetectedPixels.h"
-#include "SEFramework/Plugin/Plugin.h"
-#include "SEImplementation/Plugin/NDetectedPixels/NDetectedPixelsTaskFactory.h"
+#include "SEFramework/Task/SourceTask.h"
+#include "SEImplementation/Plugin/SNRRatio/SNRRatio.h"
+#include "SEImplementation/Plugin/IsophotalFlux/IsophotalFlux.h"
 
 namespace SourceXtractor {
-class NDetectedPixelsPlugin : public Plugin {
+class SNRRatioSourceTask : public SourceTask {
 public:
-  virtual ~NDetectedPixelsPlugin() = default;
-  virtual void registerPlugin(PluginAPI& plugin_api) {
-    plugin_api.getTaskFactoryRegistry().registerTaskFactory<NDetectedPixelsTaskFactory, NDetectedPixels>();
-    plugin_api.getOutputRegistry().registerColumnConverter<NDetectedPixels, int64_t>(
-            "n_detected_pixels",
-            [](const NDetectedPixels& prop){
-              return prop.getNDetectedPixels();
-            },
-            "[]",
-            "Total number of detected pixels"
-    );
-    plugin_api.getOutputRegistry().enableOutput<NDetectedPixels>("NDetectedPixels");
-  }
-  virtual std::string getIdString() const {
-    return "n_detected_pixels";
-  }
+  virtual ~SNRRatioSourceTask() = default;
+  virtual void computeProperties(SourceInterface& source) const {
+    // get the input quantities
+    const auto& iso_flux       = source.getProperty<IsophotalFlux>().getFlux();
+    const auto& iso_flux_error = source.getProperty<IsophotalFlux>().getFluxError();
+
+    // compute and store the property
+    SeFloat snr_ratio = iso_flux / iso_flux_error;
+    source.setProperty<SNRRatio>(snr_ratio);
+ };
 private:
-}; // end of NDetectedPixelsPlugin class
-}  // namespace SourceXtractor
-#endif /* _SEIMPLEMENTATION_PLUGIN_NDETECTEDPIXELS_H_ */
+}; // End of SNRRatioSourceTask class
+} // namespace SourceXtractor
+
+#endif /* _SEIMPLEMENTATION_PLUGIN_SNRRATIOSOURCETASK_H_ */
+
+

@@ -30,39 +30,35 @@
  */    
 
 /**
- * @file NDetectedPixelsPlugin.h
+ * @file DummySourceTask.h
  *
- * @date Apr 27, 2018
- * @author mkuemmel@usm.lmu.de
+ * @date
+ * @author
  */
 
-#ifndef _SEIMPLEMENTATION_PLUGIN_NDETECTEDPIXELSPLUGIN_H_
-#define _SEIMPLEMENTATION_PLUGIN_NDETECTEDPIXELSPLUGIN_H_
+#ifndef _SEIMPLEMENTATION_PLUGIN_DUMMYSOURCETASK_H_
+#define _SEIMPLEMENTATION_PLUGIN_DUMMYSOURCETASK_H_
 
-#include "NDetectedPixels.h"
-#include "SEFramework/Plugin/Plugin.h"
-#include "SEImplementation/Plugin/NDetectedPixels/NDetectedPixelsTaskFactory.h"
+#include "SEFramework/Task/SourceTask.h"
+#include "SEImplementation/Plugin/Dummy/Dummy.h"
+#include "SEImplementation/Plugin/DetectionFramePixelValues/DetectionFramePixelValues.h"
 
 namespace SourceXtractor {
-class NDetectedPixelsPlugin : public Plugin {
+class DummySourceTask : public SourceTask {
 public:
-  virtual ~NDetectedPixelsPlugin() = default;
-  virtual void registerPlugin(PluginAPI& plugin_api) {
-    plugin_api.getTaskFactoryRegistry().registerTaskFactory<NDetectedPixelsTaskFactory, NDetectedPixels>();
-    plugin_api.getOutputRegistry().registerColumnConverter<NDetectedPixels, int64_t>(
-            "n_detected_pixels",
-            [](const NDetectedPixels& prop){
-              return prop.getNDetectedPixels();
-            },
-            "[]",
-            "Total number of detected pixels"
-    );
-    plugin_api.getOutputRegistry().enableOutput<NDetectedPixels>("NDetectedPixels");
-  }
-  virtual std::string getIdString() const {
-    return "n_detected_pixels";
-  }
+  DummySourceTask(float dummy_value): m_dummy_value(dummy_value){}
+  virtual ~DummySourceTask() = default;
+  virtual void computeProperties(SourceInterface& source) const {
+    const auto& pixel_values = source.getProperty<DetectionFramePixelValues>().getValues();
+    int n_pixels = (int)pixel_values.size()*(int)m_dummy_value;
+    source.setProperty<Dummy>(n_pixels);
+};
 private:
-}; // end of NDetectedPixelsPlugin class
-}  // namespace SourceXtractor
-#endif /* _SEIMPLEMENTATION_PLUGIN_NDETECTEDPIXELS_H_ */
+  float m_dummy_value;
+}; // End of DummySourceTask class
+} // namespace SourceXtractor
+
+#endif /* _SEIMPLEMENTATION_PLUGIN_DUMMYSOURCETASK_H_ */
+
+
+

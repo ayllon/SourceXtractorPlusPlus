@@ -30,39 +30,28 @@
  */    
 
 /**
- * @file NDetectedPixelsPlugin.h
+ * @file Dummy.h
  *
- * @date Apr 27, 2018
- * @author mkuemmel@usm.lmu.de
+ * @date
+ * @author
  */
 
-#ifndef _SEIMPLEMENTATION_PLUGIN_NDETECTEDPIXELSPLUGIN_H_
-#define _SEIMPLEMENTATION_PLUGIN_NDETECTEDPIXELSPLUGIN_H_
+#ifndef _SEIMPLEMENTATION_PLUGIN_DUMMY_H_
+#define _SEIMPLEMENTATION_PLUGIN_DUMMY_H_
 
-#include "NDetectedPixels.h"
-#include "SEFramework/Plugin/Plugin.h"
-#include "SEImplementation/Plugin/NDetectedPixels/NDetectedPixelsTaskFactory.h"
+#include "SEFramework/Property/Property.h"
 
 namespace SourceXtractor {
-class NDetectedPixelsPlugin : public Plugin {
+class Dummy : public Property {
 public:
-  virtual ~NDetectedPixelsPlugin() = default;
-  virtual void registerPlugin(PluginAPI& plugin_api) {
-    plugin_api.getTaskFactoryRegistry().registerTaskFactory<NDetectedPixelsTaskFactory, NDetectedPixels>();
-    plugin_api.getOutputRegistry().registerColumnConverter<NDetectedPixels, int64_t>(
-            "n_detected_pixels",
-            [](const NDetectedPixels& prop){
-              return prop.getNDetectedPixels();
-            },
-            "[]",
-            "Total number of detected pixels"
-    );
-    plugin_api.getOutputRegistry().enableOutput<NDetectedPixels>("NDetectedPixels");
-  }
-  virtual std::string getIdString() const {
-    return "n_detected_pixels";
+  virtual ~Dummy() = default;
+  Dummy(int dummy) : m_dummy(dummy) {}
+  int getDummy () const {
+    return m_dummy;
   }
 private:
-}; // end of NDetectedPixelsPlugin class
-}  // namespace SourceXtractor
-#endif /* _SEIMPLEMENTATION_PLUGIN_NDETECTEDPIXELS_H_ */
+  int m_dummy;
+}; // end of Dummy class
+} // namespace SourceXtractor
+
+#endif /* _SEIMPLEMENTATION_PLUGIN_DUMMY_H_*/

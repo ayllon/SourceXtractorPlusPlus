@@ -30,39 +30,39 @@
  */    
 
 /**
- * @file NDetectedPixelsPlugin.h
+ * @file SNRRatioPlugin.h
  *
- * @date Apr 27, 2018
+ * @date Apr 29, 2020
  * @author mkuemmel@usm.lmu.de
  */
 
-#ifndef _SEIMPLEMENTATION_PLUGIN_NDETECTEDPIXELSPLUGIN_H_
-#define _SEIMPLEMENTATION_PLUGIN_NDETECTEDPIXELSPLUGIN_H_
+#ifndef _SEIMPLEMENTATION_PLUGIN_SNRRATIOPLUGIN_H_
+#define _SEIMPLEMENTATION_PLUGIN_SNRRATIOPLUGIN_H_
 
-#include "NDetectedPixels.h"
+#include "SNRRatio.h"
 #include "SEFramework/Plugin/Plugin.h"
-#include "SEImplementation/Plugin/NDetectedPixels/NDetectedPixelsTaskFactory.h"
+#include "SEImplementation/Plugin/SNRRatio/SNRRatioTaskFactory.h"
 
 namespace SourceXtractor {
-class NDetectedPixelsPlugin : public Plugin {
+class SNRRatioPlugin : public Plugin {
 public:
-  virtual ~NDetectedPixelsPlugin() = default;
+  virtual ~SNRRatioPlugin() = default;
   virtual void registerPlugin(PluginAPI& plugin_api) {
-    plugin_api.getTaskFactoryRegistry().registerTaskFactory<NDetectedPixelsTaskFactory, NDetectedPixels>();
-    plugin_api.getOutputRegistry().registerColumnConverter<NDetectedPixels, int64_t>(
-            "n_detected_pixels",
-            [](const NDetectedPixels& prop){
-              return prop.getNDetectedPixels();
+    plugin_api.getTaskFactoryRegistry().registerTaskFactory<SNRRatioTaskFactory, SNRRatio>();
+    plugin_api.getOutputRegistry().registerColumnConverter<SNRRatio, float>(
+            "snrratio",
+            [](const SNRRatio& prop){
+              return prop.getSNRRatio();
             },
             "[]",
-            "Total number of detected pixels"
+            "The object signal-to-noise ratio"
     );
-    plugin_api.getOutputRegistry().enableOutput<NDetectedPixels>("NDetectedPixels");
+    plugin_api.getOutputRegistry().enableOutput<SNRRatio>("SNRRatio");
   }
   virtual std::string getIdString() const {
-    return "n_detected_pixels";
+    return "snrratio";
   }
 private:
-}; // end of NDetectedPixelsPlugin class
+}; // end of SNRRatioPlugin class
 }  // namespace SourceXtractor
-#endif /* _SEIMPLEMENTATION_PLUGIN_NDETECTEDPIXELS_H_ */
+#endif /* _SEIMPLEMENTATION_PLUGIN_SNRRATIOPLUGIN_H_ */

@@ -30,39 +30,31 @@
  */    
 
 /**
- * @file NDetectedPixelsPlugin.h
+ * @file SNRRatioTaskFactory.h
  *
- * @date Apr 27, 2018
+ * @date Jan 29, 2020
  * @author mkuemmel@usm.lmu.de
  */
+#ifndef _SEIMPLEMENTATION_PLUGIN_SNRRATIOTASKFACTORY_H_
+#define _SEIMPLEMENTATION_PLUGIN_SNRRATIOTASKFACTORY_H_
 
-#ifndef _SEIMPLEMENTATION_PLUGIN_NDETECTEDPIXELSPLUGIN_H_
-#define _SEIMPLEMENTATION_PLUGIN_NDETECTEDPIXELSPLUGIN_H_
-
-#include "NDetectedPixels.h"
-#include "SEFramework/Plugin/Plugin.h"
-#include "SEImplementation/Plugin/NDetectedPixels/NDetectedPixelsTaskFactory.h"
+#include "SEFramework/Task/TaskFactory.h"
+#include "SEImplementation/Plugin/SNRRatio/SNRRatioSourceTask.h"
 
 namespace SourceXtractor {
-class NDetectedPixelsPlugin : public Plugin {
+class SNRRatioTaskFactory : public TaskFactory {
 public:
-  virtual ~NDetectedPixelsPlugin() = default;
-  virtual void registerPlugin(PluginAPI& plugin_api) {
-    plugin_api.getTaskFactoryRegistry().registerTaskFactory<NDetectedPixelsTaskFactory, NDetectedPixels>();
-    plugin_api.getOutputRegistry().registerColumnConverter<NDetectedPixels, int64_t>(
-            "n_detected_pixels",
-            [](const NDetectedPixels& prop){
-              return prop.getNDetectedPixels();
-            },
-            "[]",
-            "Total number of detected pixels"
-    );
-    plugin_api.getOutputRegistry().enableOutput<NDetectedPixels>("NDetectedPixels");
+  SNRRatioTaskFactory() {}
+  virtual ~SNRRatioTaskFactory() = default;
+  // TaskFactory implementation
+  virtual std::shared_ptr<Task> createTask(const PropertyId& property_id) const {
+    if (property_id == PropertyId::create<SNRRatio>()) {
+      return std::make_shared<SNRRatioSourceTask>();
+    }
+    else{
+      return nullptr;
+    }
   }
-  virtual std::string getIdString() const {
-    return "n_detected_pixels";
-  }
-private:
-}; // end of NDetectedPixelsPlugin class
+}; // end of SNRRatioTaskFactory class
 }  // namespace SourceXtractor
-#endif /* _SEIMPLEMENTATION_PLUGIN_NDETECTEDPIXELS_H_ */
+#endif /* _SEIMPLEMENTATION_PLUGIN_SNRRATIOTASKFACTORY_H_ */

@@ -30,39 +30,29 @@
  */    
 
 /**
- * @file NDetectedPixelsPlugin.h
+ * @file SNRRatio.h
  *
- * @date Apr 27, 2018
+ * @date Jan 29, 2020
  * @author mkuemmel@usm.lmu.de
  */
 
-#ifndef _SEIMPLEMENTATION_PLUGIN_NDETECTEDPIXELSPLUGIN_H_
-#define _SEIMPLEMENTATION_PLUGIN_NDETECTEDPIXELSPLUGIN_H_
+#ifndef _SEIMPLEMENTATION_PLUGIN_SNRRATIO_H_
+#define _SEIMPLEMENTATION_PLUGIN_SNRRATIO_H_
 
-#include "NDetectedPixels.h"
-#include "SEFramework/Plugin/Plugin.h"
-#include "SEImplementation/Plugin/NDetectedPixels/NDetectedPixelsTaskFactory.h"
+#include "SEUtils/Types.h"
+#include "SEFramework/Property/Property.h"
 
 namespace SourceXtractor {
-class NDetectedPixelsPlugin : public Plugin {
+class SNRRatio : public Property {
 public:
-  virtual ~NDetectedPixelsPlugin() = default;
-  virtual void registerPlugin(PluginAPI& plugin_api) {
-    plugin_api.getTaskFactoryRegistry().registerTaskFactory<NDetectedPixelsTaskFactory, NDetectedPixels>();
-    plugin_api.getOutputRegistry().registerColumnConverter<NDetectedPixels, int64_t>(
-            "n_detected_pixels",
-            [](const NDetectedPixels& prop){
-              return prop.getNDetectedPixels();
-            },
-            "[]",
-            "Total number of detected pixels"
-    );
-    plugin_api.getOutputRegistry().enableOutput<NDetectedPixels>("NDetectedPixels");
-  }
-  virtual std::string getIdString() const {
-    return "n_detected_pixels";
+  virtual ~SNRRatio() = default;
+  SNRRatio(SeFloat snrratio) : m_snrratio(snrratio) {}
+  SeFloat getSNRRatio () const {
+    return m_snrratio;
   }
 private:
-}; // end of NDetectedPixelsPlugin class
-}  // namespace SourceXtractor
-#endif /* _SEIMPLEMENTATION_PLUGIN_NDETECTEDPIXELS_H_ */
+  SeFloat m_snrratio;
+}; // end of SNRRatio class
+} // namespace SourceXtractor
+
+#endif /* _SEIMPLEMENTATION_PLUGIN_SNRRATIO_H_*/
