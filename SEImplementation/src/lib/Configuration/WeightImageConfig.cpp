@@ -101,6 +101,7 @@ void WeightImageConfig::initialize(const UserValues& args) {
   m_weight_scaling = args.find(WEIGHT_SCALING)->second.as<double>();
 
   if (m_weight_image != nullptr) {
+    std::cout << std::endl<< std::endl<< std::endl<< m_weight_image << " " << (int)m_weight_type << " " << m_weight_scaling << std::endl<< std::endl<< std::endl;
     m_weight_image = convertWeightMap(m_weight_image, m_weight_type, m_weight_scaling);
 
     auto flux_scale = getDependency<DetectionImageConfig>().getOriginalFluxScale();
@@ -171,6 +172,7 @@ protected:
         }
         break;
       case WeightImageConfig::WeightType::WEIGHT_TYPE_WEIGHT:
+        std::cout << "Weight type: " << (int)m_weight_type << " scaling: " << m_scaling;
         for (int iy = y; iy < y+height; iy++) {
           for (int ix = x; ix < x+width; ix++) {
             auto value = image->getValue(ix, iy) * m_scaling;
@@ -181,6 +183,7 @@ protected:
             }
           }
         }
+        std::cout << " x:" << x <<" y: " << y <<" wht image: " << image->getValue(x, y) << " " << " var image: " << tile.getImage()->getValue(0, 0) << std::endl;
         break;
       default:
       case WeightImageConfig::WeightType::WEIGHT_TYPE_FROM_BACKGROUND:
