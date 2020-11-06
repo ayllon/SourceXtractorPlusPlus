@@ -87,8 +87,11 @@ def listdir(bintray, args):
         entries = bintray.recursive(args.path)
     else:
         entries = bintray.listdir(args.path)
+
+    regex = re.compile(args.pattern) if args.pattern else None
     for e in entries:
-        print(e)
+        if regex and regex.match(e):
+            print(e)
 
 
 def rm(bintray, args):
@@ -98,7 +101,9 @@ def rm(bintray, args):
         if not args.force:
             raise ValueError('Trying to remove protected files! Aborting')
         else:
-            answer = input('You are trying to remove protected files. Do you really want to do that? (yes or no)')
+            answer = input(
+                'You are trying to remove protected files. Do you really want to do that? (yes or no)'
+            )
             if answer.lower() != 'yes':
                 raise ValueError('Trying to remove protected files! Aborting')
 
@@ -129,19 +134,24 @@ if __name__ == '__main__':
         logging.getLogger().setLevel(logging.DEBUG)
 
     parser = ArgumentParser()
-    parser.add_argument('-u', '--user', type=str, default=os.getenv('BINTRAY_USER'), help='Bintray user')
-    parser.add_argument('-t', '--token', type=str, default=os.getenv('BINTRAY_TOKEN'), help='Bintray token')
+    parser.add_argument('-u', '--user', type=str, default=os.getenv('BINTRAY_USER'),
+                        help='Bintray user')
+    parser.add_argument('-t', '--token', type=str, default=os.getenv('BINTRAY_TOKEN'),
+                        help='Bintray token')
     subparsers = parser.add_subparsers()
 
     ls_subparser = subparsers.add_parser('ls', description='List directory')
     ls_subparser.add_argument('-r', '--recursive', action='store_true', help='Recursive')
+    ls_subparser.add_argument('--pattern', type=str,
+                              help='Restrict erasing to files matching a regex')
     ls_subparser.add_argument('path')
     ls_subparser.set_defaults(method=listdir)
 
     rm_subparser = subparsers.add_parser('rm', description='Remove')
     rm_subparser.add_argument('-r', '--recursive', action='store_true', help='Recursive')
     rm_subparser.add_argument('-f', '--force', action='store_true', help='Remove protected files')
-    rm_subparser.add_argument('--pattern', type=str, help='Restrict erasing to files matching a regex')
+    rm_subparser.add_argument('--pattern', type=str,
+                              help='Restrict erasing to files matching a regex')
     rm_subparser.add_argument('path')
     rm_subparser.set_defaults(method=rm)
 
