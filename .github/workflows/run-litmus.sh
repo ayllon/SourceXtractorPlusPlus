@@ -43,13 +43,13 @@ fi
 
 # Patch config file
 sed -i "s:binary=.*:binary=/usr/bin/sourcextractor++:" pytest.ini
-sed -i "s:output_area=.*:output_area=/tests:" pytest.ini
+sed -i "s:output_area=.*:output_area=/tmp/sourcex/:" pytest.ini
 sed -i "s:pythonpath=.*:pythonpath=:" pytest.ini
 sed -i '/\[pytest\]/a filterwarnings=ignore::RuntimeWarning' pytest.ini
 
 cat pytest.ini
 
-# Run skipping the report generation
+# Run
 if command -v pytest-3 &> /dev/null; then
   PYTEST=pytest-3
 elif command -v py.test &> /dev/null; then
@@ -58,4 +58,4 @@ else
   PYTEST=pytest
 fi
 
-${PYTEST} -v -k "not gsl"
+${PYTEST} -v -k "not gsl" --html=/tmp/sourcex/report.html
