@@ -29,6 +29,8 @@ jobs:
 #            os-version: 8
     container: ${{ matrix.os-type }}:${{ matrix.os-version }}
     steps:
+      - name: Install git
+        run: yum install -y git git-lfs
       - name: Checkout
         uses: actions/checkout@v2
       - name: Get package name and version
