@@ -37,7 +37,7 @@ jobs:
       - name: Install dependencies
         uses: astrorama/actions/setup-dependencies@master
         with:
-          dependency-list: .github/workflows/dependencies.txt
+          dependency-list: ./.github/workflows/dependencies.txt
       - name: Build
         id: build
         uses: astrorama/actions/elements-build-rpm@master
@@ -86,7 +86,7 @@ jobs:
       - name: Install dependencies
         uses: astrorama/actions/setup-dependencies@master
         with:
-          dependency-list: .github/workflows/test-dependencies.txt
+          dependency-list: ./.github/workflows/test-dependencies.txt
       - name: Download RPM
         uses: actions/download-artifact@v2
         with:
