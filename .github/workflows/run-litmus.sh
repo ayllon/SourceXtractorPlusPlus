@@ -49,6 +49,9 @@ sed -i '/\[pytest\]/a filterwarnings=ignore::RuntimeWarning' pytest.ini
 
 cat pytest.ini
 
+# Disable check images, they take too much space
+sed -i "s:^check-image:#check-image:g" sourcex.config
+
 # Run
 if command -v pytest-3 &> /dev/null; then
   PYTEST=pytest-3

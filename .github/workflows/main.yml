@@ -84,8 +84,8 @@ jobs:
       - name: Upload reports and logs
         uses: actions/upload-artifact@v2
         with:
-          name: ${{ matrix.os-type }}${{ matrix.os-version }}-report
-          path: /tmp/sourcex/**/*.[pl][do]?
+          name: ${{ matrix.os-type }}${{ matrix.os-version }}-test-results
+          path: /tmp/sourcex/
           retention-days: 15
 
 #####################
