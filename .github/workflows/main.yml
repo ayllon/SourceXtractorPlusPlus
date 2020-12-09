@@ -34,7 +34,9 @@ jobs:
       - name: Get package name and version
         id: package-version
         uses: astrorama/actions/elements-project@master
-      - run: ls -l .*
+      - run: |
+          ls -la .
+          cat CMakeLists.txt
       - name: Install dependencies
         uses: astrorama/actions/setup-dependencies@master
         with:
