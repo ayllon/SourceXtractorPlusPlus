@@ -1,11 +1,10 @@
 #!/bin/bash
 set -ex
 
-# TODO
 # The changes happened, or have been pulled into, this branch
-TARGET_BRANCH=$4
+TARGET_BRANCH=${GITHUB_BASE_REF:-$GITHUB_REF}
 # In the case of pull requests, this is the origin branch
-ORIGIN_BRANCH=$5
+ORIGIN_BRANCH=${GITHUB_HEAD_REF:-$GITHUB_REF}
 
 # Platform-specific configuration
 source /etc/os-release
@@ -27,7 +26,7 @@ cd /tmp/sourcextractor-litmus
 # 1: Those contained on a branch that matches the origin of the pull request (if it is a pull)
 # 2: Those contained on a branch that matches the destination of the pull request (or the name of the branch)
 # 3: The default branch for the tests (i.e. master)
-BRANCHES=("${ORIGIN_BRANCH}" "${TARGET_BRANCH}" "master")
+BRANCHES=("${ORIGIN_BRANCH}" "${TARGET_BRANCH}" "refs/heads/master")
 for b in ${BRANCHES[@]}; do
   echo "Try $b"
   git fetch --update-head-ok origin "$b:$b" && git checkout "$b" && break
