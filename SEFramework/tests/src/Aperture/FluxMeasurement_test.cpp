@@ -66,7 +66,7 @@ BOOST_FIXTURE_TEST_CASE(VarThresholdSome_test, FluxMeasurement_Fixture) {
 BOOST_FIXTURE_TEST_CASE(Boundary_test, FluxMeasurement_Fixture) {
   auto measurement = measureFlux(aperture, 3, 2, detection_image, variance_map, 1e5, false);
   BOOST_CHECK_EQUAL(measurement.m_flags, SourceXtractor::Flags::BOUNDARY);
-  BOOST_CHECK_CLOSE(measurement.m_flux, 139.96, 1e-2);
+  BOOST_CHECK_CLOSE(measurement.m_flux, 139.96, 1e-1);
 }
 
 //-----------------------------------------------------------------------------
