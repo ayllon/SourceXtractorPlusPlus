@@ -65,8 +65,8 @@ elements_add_library(SEMain ${LIB_SRC}
 elements_add_executable(sourcextractor++ src/program/SourceXtractor.cpp
                      LINK_LIBRARIES SEMain SEUtils SEFramework SEImplementation)
 
-elements_add_executable(TestImage src/program/TestImage.cpp
-                     LINK_LIBRARIES SEMain SEUtils SEFramework SEImplementation)
+#elements_add_executable(TestImage src/program/TestImage.cpp
+#                     LINK_LIBRARIES SEMain SEUtils SEFramework SEImplementation)
 
 #===============================================================================
 # Declare the Boost tests here
